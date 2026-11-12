@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christy Alex Martin | Motion Graphics & 3D Graphic Designer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for crisp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Three.js for subtle interactive 3D wireframe backdrop in hero -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        alabaster: '#f8fafc',
+                        studioWhite: '#ffffff',
+                        inkDark: '#0f172a',
+                        inkMuted: '#475569',
+                        borderCrisp: '#e2e8f0',
+                        accentCobalt: '#2563eb',
+                        accentIndigo: '#4f46e5',
+                        accentCyan: '#0891b2',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Architectural Drafting Grid Background */
+        .bg-studio-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+        }
+
+        /* Crisp Light Editorial Cards */
+        .studio-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.04);
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+        }
+
+        .studio-card:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 14px 30px -8px rgba(37, 99, 235, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Soft Ambient Pastel Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Print Styles for Clean PDF Export */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 10.5pt;
+            }
+            .no-print, #hero-canvas-container, .glow-orb, nav {
+                display: none !important;
+            }
+            .studio-card {
+                background: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                transform: none !important;
+                break-inside: avoid;
+            }
+            .gradient-text {
+                background: none !important;
+                -webkit-text-fill-color: #1e3a8a !important;
+                color: #1e3a8a !important;
+            }
+            section {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-studio-grid antialiased selection:bg-blue-600/15 selection:text-blue-900">
+
+    <!-- Toast Notification for Copy Email -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none no-print">
+        <div class="bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span id="toast-message" class="text-sm font-medium">Email copied to clipboard!</span>
+        </div>
+    </div>
+
+    <!-- Sticky Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Monogram Logo -->
+                <a href="#top" class="flex items-center gap-2.5 group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center font-display font-extrabold text-sm tracking-wider text-white shadow-sm shadow-blue-600/20 group-hover:scale-105 transition-transform">
+                        CAM
+                    </div>
+                    <span class="font-display font-bold text-slate-900 tracking-tight hidden sm:inline">Christy Alex Martin</span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+                    <a href="#about" class="hover:text-blue-600 transition-colors">About</a>
+                    <a href="#skills" class="hover:text-blue-600 transition-colors">Skills &amp; Tools</a>
+                    <a href="#experience" class="hover:text-blue-600 transition-colors">Projects</a>
+                    <a href="#activities" class="hover:text-blue-600 transition-colors">Creative Lab</a>
+                    <a href="#education" class="hover:text-blue-600 transition-colors">Education</a>
+                    <a href="#contact" class="hover:text-blue-600 transition-colors">Contact</a>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="window.print()" title="Print or Save as PDF" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-file-arrow-down text-blue-600"></i>
+                        <span>Print / Save PDF</span>
+                    </button>
+                    <a href="#contact" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-blue-600/20 transition-all">
+                        Hire / Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="top" class="relative pt-14 pb-20 sm:pt-24 sm:pb-28 overflow-hidden border-b border-slate-200/70 bg-gradient-to-b from-slate-50/70 via-white to-white">
+        <!-- Soft Ambient Light Orbs -->
+        <div class="glow-orb w-96 h-96 bg-blue-200/40 -top-24 -left-24"></div>
+        <div class="glow-orb w-80 h-80 bg-cyan-200/35 top-28 right-0"></div>
+        <div class="glow-orb w-72 h-72 bg-indigo-200/30 bottom-0 left-1/3"></div>
+
+        <!-- Subtle 3D Wireframe Mesh Canvas -->
+        <div id="hero-canvas-container" class="absolute inset-0 z-0 opacity-75 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <!-- Hero Left Copy -->
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-semibold text-blue-700">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span>Available for 3D Generalist &amp; Motion Design Roles</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.06]">
+                            CHRISTY ALEX <br class="hidden sm:inline">
+                            <span class="gradient-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
+                                MARTIN
+                            </span>
+                        </h1>
+                        <p class="font-display text-lg sm:text-2xl font-bold text-slate-700 tracking-wide">
+                            MOTION GRAPHICS &amp; 3D GRAPHIC DESIGNER
+                        </p>
+                    </div>
+
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Aspiring <strong class="text-slate-900 font-semibold">3D Generalist and Motion Designer</strong> equipped with hands-on training in <span class="text-blue-700 font-medium">Blender</span>, <span class="text-indigo-700 font-medium">After Effects</span>, <span class="text-indigo-700 font-medium">Premiere Pro</span>, <span class="text-cyan-700 font-medium">Photoshop</span>, and <span class="text-blue-700 font-medium">Illustrator</span>. Consistently self-taught advanced features outside of the regular course curriculum to elevate animation quality.
+                    </p>
+
+                    <!-- CTA Row -->
+                    <div class="flex flex-wrap items-center gap-3.5 pt-2 no-print">
+                        <a href="#contact" class="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm sm:text-base shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2.5">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Get in Touch</span>
+                        </a>
+                        <button onclick="window.print()" class="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-sm sm:text-base shadow-sm transition-all flex items-center gap-2.5">
+                            <i class="fa-solid fa-print text-blue-600"></i>
+                            <span>Print / Save PDF</span>
+                        </button>
+                        <a href="https://www.behance.net/search/projects?search=cyaxmn%201999" target="_blank" rel="noopener noreferrer" class="px-5 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200/75 border border-slate-200 text-slate-700 font-semibold text-sm sm:text-base transition-all flex items-center gap-2">
+                            <i class="fa-brands fa-behance text-blue-600"></i>
+                            <span>cyaxmn 1999</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Right Highlight Card (Leadership / Profile Overview) -->
+                <div class="lg:col-span-4">
+                    <div id="about" class="studio-card rounded-2xl p-6 sm:p-7 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-blue-100/70 to-transparent rounded-bl-full pointer-events-none"></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+                                <i class="fa-solid fa-compass-drafting text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] uppercase tracking-widest text-blue-600 font-bold">Leadership &amp; Overview</span>
+                                <h2 class="font-display font-bold text-slate-900 text-lg">Creative Profile</h2>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-5">
+                            “Creative and detail-oriented Motion Graphic Designer with a comprehensive <strong class="text-slate-900 font-semibold">1.5-year Advanced Diploma in Motion Graphics and 3D Production</strong>.”
+                        </p>
+                        <div class="border-t border-slate-200 pt-4 space-y-2.5 text-xs text-slate-500">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-blue-600"></i> Base</span>
+                                <span class="text-slate-800 font-semibold">Kottayam, Kerala, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-atom text-cyan-600"></i> Academic</span>
+                                <span class="text-slate-800 font-semibold">BSc Physics &amp; 3D Production</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-language text-indigo-600"></i> Communication</span>
+                                <span class="text-slate-800 font-semibold">Strong English Skills</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 py-20">
+
+        <!-- SKILLS & SOFTWARE SECTION -->
+        <section id="skills" class="scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-blue-600 font-bold">Capabilities &amp; Pipeline</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Core Skills &amp; Software Stack</h2>
+                </div>
+
+                <!-- Interactive Filter Tabs -->
+                <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-xl bg-slate-100 border border-slate-200 no-print" role="tablist">
+                    <button onclick="filterPortfolio('all')" data-filter="all" class="filter-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm transition-all">
+                        All
+                    </button>
+                    <button onclick="filterPortfolio('3d')" data-filter="3d" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                        3D &amp; Rendering
+                    </button>
+                    <button onclick="filterPortfolio('motion')" data-filter="motion" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                        Motion &amp; Video
+                    </button>
+                    <button onclick="filterPortfolio('design')" data-filter="design" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
+                        Brand &amp; Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3 Core Competency Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Competency 1 -->
+                <div data-category="3d" class="portfolio-item studio-card rounded-2xl p-6 flex flex-col justify-between transition-opacity duration-300">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600 mb-5">
+                            <i class="fa-solid fa-cubes text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-slate-900 mb-2.5">3D Modeling &amp; Asset Creation</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Hard-surface and organic 3D asset modeling, realistic texturing, studio lighting setups, and high-quality frame rendering grounded in optical wave mechanics.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-cyan-50 text-cyan-700 border border-cyan-200/70 text-xs font-semibold">Blender</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Studio Lighting</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Texturing</span>
+                    </div>
+                </div>
+
+                <!-- Competency 2 -->
+                <div data-category="motion" class="portfolio-item studio-card rounded-2xl p-6 flex flex-col justify-between transition-opacity duration-300">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 mb-5">
+                            <i class="fa-solid fa-film text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-slate-900 mb-2.5">Motion Graphics &amp; Video Post-Production</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Dynamic motion design, 2D frame-by-frame and vector animation implementing the 12 core principles of animation, digital compositing, and video post-production.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200/70 text-xs font-semibold">After Effects</span>
+                        <span class="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/70 text-xs font-semibold">Premiere Pro</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Compositing</span>
+                    </div>
+                </div>
+
+                <!-- Competency 3 -->
+                <div data-category="design" class="portfolio-item studio-card rounded-2xl p-6 flex flex-col justify-between transition-opacity duration-300">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-5">
+                            <i class="fa-solid fa-pen-nib text-xl"></i>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-slate-900 mb-2.5">Core Graphic Design &amp; Brand Identity</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Custom vector logos, color &amp; typography palettes, comprehensive brand guidelines, comic book layouts, and print media design.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-200/70 text-xs font-semibold">Illustrator</span>
+                        <span class="px-2.5 py-1 rounded-md bg-sky-50 text-sky-700 border border-sky-200/70 text-xs font-semibold">Photoshop</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Print &amp; Brand</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Stack Badges Bar -->
+            <div class="studio-card rounded-2xl p-6 bg-slate-50/60">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                    <h3 class="font-display text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-blue-600"></i>
+                        <span>Production Toolset &amp; Software Stack</span>
+                    </h3>
+                    <span class="text-xs font-medium text-slate-500">Self-taught advanced workflows outside regular curriculum</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <!-- Blender -->
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 hover:border-orange-300 shadow-2xs transition-colors">
+                        <div class="w-9 h-9 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">Blender</div>
+                            <div class="text-[11px] text-slate-500">3D &amp; Rendering</div>
+                        </div>
+                    </div>
+                    <!-- After Effects -->
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 hover:border-indigo-300 shadow-2xs transition-colors">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center font-display font-extrabold text-xs">
+                            Ae
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">After Effects</div>
+                            <div class="text-[11px] text-slate-500">Motion &amp; VFX</div>
+                        </div>
+                    </div>
+                    <!-- Premiere Pro -->
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 hover:border-purple-300 shadow-2xs transition-colors">
+                        <div class="w-9 h-9 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center font-display font-extrabold text-xs">
+                            Pr
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">Premiere Pro</div>
+                            <div class="text-[11px] text-slate-500">Video Editing</div>
+                        </div>
+                    </div>
+                    <!-- Photoshop -->
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 hover:border-sky-300 shadow-2xs transition-colors">
+                        <div class="w-9 h-9 rounded-lg bg-sky-50 border border-sky-200 text-sky-700 flex items-center justify-center font-display font-extrabold text-xs">
+                            Ps
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">Photoshop</div>
+                            <div class="text-[11px] text-slate-500">Compositing</div>
+                        </div>
+                    </div>
+                    <!-- Illustrator -->
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200/90 hover:border-amber-300 shadow-2xs transition-colors">
+                        <div class="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center font-display font-extrabold text-xs">
+                            Ai
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-slate-900">Illustrator</div>
+                            <div class="text-[11px] text-slate-500">Vector &amp; Brand</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE & FEATURED PROJECTS SECTION -->
+        <section id="experience" class="scroll-mt-24">
+            <div class="mb-10">
+                <span class="text-xs uppercase tracking-widest text-blue-600 font-bold">Selected Works &amp; Experience</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Experience</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+                <!-- Project 1: Brand Identity & Motion Campaign -->
+                <article data-category="design motion" class="portfolio-item studio-card rounded-2xl overflow-hidden group flex flex-col transition-opacity duration-300">
+                    <!-- Clean Light Editorial Header -->
+                    <div class="h-44 relative bg-gradient-to-br from-blue-50 via-indigo-50/80 to-cyan-50 p-6 flex flex-col justify-between overflow-hidden border-b border-slate-200/80">
+                        <div class="absolute -right-8 -bottom-8 w-40 h-40 rounded-full border-2 border-blue-300/40 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="absolute right-4 bottom-4 w-24 h-24 rounded-full border-2 border-indigo-300/50 group-hover:rotate-45 transition-transform duration-500"></div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-3 py-1 rounded-full bg-white border border-blue-200 text-blue-700 text-xs font-bold shadow-2xs">
+                                Brand Systems &amp; Motion
+                            </span>
+                            <i class="fa-solid fa-bezier-curve text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 text-xs text-slate-600 font-mono font-medium">
+                                <span class="w-3 h-3 rounded-sm bg-blue-600"></span>
+                                <span class="w-3 h-3 rounded-sm bg-indigo-500"></span>
+                                <span class="w-3 h-3 rounded-sm bg-cyan-500"></span>
+                                <span class="ml-1">VECTOR • TYPOGRAPHY • GUIDELINES</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Body -->
+                    <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3">
+                                Brand Identity &amp; Motion Campaign
+                            </h3>
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-5">
+                                Developed a comprehensive visual identity for a mockup brand, including custom vector logos, color &amp; typography palettes, and brand guidelines.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Custom Vector Logos</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Color &amp; Typography Palettes</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Brand Guidelines</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2: Lead 3D & Motion Graphics Project -->
+                <article data-category="3d motion" class="portfolio-item studio-card rounded-2xl overflow-hidden group flex flex-col transition-opacity duration-300">
+                    <!-- Clean Light Editorial Header -->
+                    <div class="h-44 relative bg-gradient-to-br from-slate-100 via-blue-50/70 to-cyan-50 p-6 flex flex-col justify-between overflow-hidden border-b border-slate-200/80">
+                        <!-- Stylized 3D Wireframe Cube Graphic -->
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 w-28 h-28 border-2 border-cyan-400/40 rotate-12 rounded-xl group-hover:rotate-45 transition-transform duration-500"></div>
+                        <div class="absolute right-10 top-1/2 -translate-y-1/2 w-20 h-20 border-2 border-blue-400/45 -rotate-12 rounded-lg group-hover:-rotate-45 transition-transform duration-500"></div>
+
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-3 py-1 rounded-full bg-white border border-cyan-200 text-cyan-700 text-xs font-bold shadow-2xs">
+                                Lead 3D Production
+                            </span>
+                            <i class="fa-solid fa-cube text-cyan-600 text-xl"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="text-xs text-slate-600 font-mono font-medium">
+                                3D ASSETS • TEXTURES • STUDIO LIGHTING • RENDERS
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Body -->
+                    <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-cyan-700 transition-colors mb-3">
+                                Lead 3D &amp; Motion Graphics Project
+                            </h3>
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-5">
+                                Modeled 3D assets, applied realistic textures, set up studio lighting, and rendered high-quality frames.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">3D Asset Modeling</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Realistic Texturing</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">Studio Lighting &amp; Renders</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ACTIVITIES & CREATIVE LAB SECTION -->
+        <section id="activities" class="scroll-mt-24">
+            <div class="mb-10">
+                <span class="text-xs uppercase tracking-widest text-indigo-600 font-bold">Multidisciplinary Craft</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Activities &amp; Creative Lab</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Highlight 1: Character & Comic Design -->
+                <div data-category="design" class="portfolio-item studio-card rounded-2xl p-6 relative overflow-hidden transition-opacity duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center">
+                            <i class="fa-solid fa-book-open"></i>
+                        </span>
+                        <span class="text-xs font-mono font-semibold text-slate-400">01 / STORYTELLING</span>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-slate-900 mb-2.5">Character &amp; Comic Design</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Developed original characters, environments, and multi-panel comic book layouts, focusing on structural anatomy, dynamic posing, and visual pacing.
+                    </p>
+                </div>
+
+                <!-- Highlight 2: 2D Animation -->
+                <div data-category="motion" class="portfolio-item studio-card rounded-2xl p-6 relative overflow-hidden transition-opacity duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-clapperboard"></i>
+                        </span>
+                        <span class="text-xs font-mono font-semibold text-slate-400">02 / KINEMATICS</span>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-slate-900 mb-2.5">2D Animation</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Created short 2D frame-by-frame and vector animations, implementing the 12 core principles of animation for fluid timing and expressive motion.
+                    </p>
+                </div>
+
+                <!-- Highlight 3: Print & Visual Design -->
+                <div data-category="design" class="portfolio-item studio-card rounded-2xl p-6 relative overflow-hidden transition-opacity duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center">
+                            <i class="fa-solid fa-print"></i>
+                        </span>
+                        <span class="text-xs font-mono font-semibold text-slate-400">03 / PRINT &amp; MEDIA</span>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-slate-900 mb-2.5">Print &amp; Visual Design</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Designed print layouts for posters, flyers, and business cards using AI-assisted creative workflows, backed by strong English communication skills.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section id="education" class="scroll-mt-24">
+            <div class="mb-10">
+                <span class="text-xs uppercase tracking-widest text-blue-600 font-bold">Academic &amp; Technical Foundation</span>
+                <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Education</h2>
+            </div>
+
+            <div class="space-y-6 relative before:absolute before:inset-y-0 before:left-5 sm:before:left-6 before:w-0.5 before:bg-gradient-to-b before:from-blue-600 before:via-cyan-500 before:to-slate-200">
+                <!-- Education 1: Diploma -->
+                <div class="relative pl-14 sm:pl-16">
+                    <div class="absolute left-3.5 sm:left-4 top-6 w-4 h-4 rounded-full bg-blue-600 ring-4 ring-white shadow-sm"></div>
+                    <div class="studio-card rounded-2xl p-6 sm:p-7">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <div>
+                                <span class="inline-block px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-1.5">
+                                    1.5-Year Advanced Diploma
+                                </span>
+                                <h3 class="font-display text-xl font-bold text-slate-900">
+                                    Diploma in Motion Graphics &amp; 3D Production
+                                </h3>
+                            </div>
+                            <span class="text-sm font-semibold text-blue-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-building-columns"></i>
+                                Arena Animations, Kottayam, Kerala, India
+                            </span>
+                        </div>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            Specialized training in <strong class="text-slate-900 font-semibold">3D Modeling, Texturing &amp; Lighting, Motion Design, Video Post-Production, Digital Compositing and Graphic Designing</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Education 2: BSc Physics -->
+                <div class="relative pl-14 sm:pl-16">
+                    <div class="absolute left-3.5 sm:left-4 top-6 w-4 h-4 rounded-full bg-cyan-600 ring-4 ring-white shadow-sm"></div>
+                    <div class="studio-card rounded-2xl p-6 sm:p-7">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <div>
+                                <span class="inline-block px-2.5 py-0.5 rounded-md bg-cyan-50 border border-cyan-200 text-cyan-700 text-xs font-bold mb-1.5">
+                                    Bachelor of Science
+                                </span>
+                                <h3 class="font-display text-xl font-bold text-slate-900">
+                                    BSc Physics
+                                </h3>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-graduation-cap text-cyan-600"></i>
+                                Deva Matha College, Kuravilangad, Kerala, India
+                            </span>
+                        </div>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            Built a strong analytical foundation in <strong class="text-slate-900 font-semibold">computational logic, wave mechanics and optics</strong> (directly applicable to 3D lighting/rendering), spatial problem-solving, and data visualization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT & FOOTER SECTION -->
+        <section id="contact" class="scroll-mt-24">
+            <div class="studio-card rounded-3xl p-7 sm:p-10 relative overflow-hidden bg-slate-50/70">
+                <div class="absolute -right-24 -bottom-24 w-72 h-72 rounded-full bg-blue-100/60 blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-24 -top-24 w-72 h-72 rounded-full bg-cyan-100/50 blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                    <!-- Left Column: Direct Contact Info -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-blue-600 font-bold">Let's Collaborate</span>
+                            <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Get in Touch</h2>
+                            <p class="text-slate-600 text-sm sm:text-base mt-2 max-w-xl">
+                                Looking for a dedicated 3D Generalist, Motion Designer, or Graphic Artist? Reach out directly via email, phone, or connect on LinkedIn and Behance.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Email Card with Copy Action -->
+                            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col justify-between gap-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Email Address</span>
+                                    <button onclick="copyEmail()" class="no-print px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold transition-colors flex items-center gap-1.5" title="Copy email address">
+                                        <i class="fa-regular fa-copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <a href="mailto:alexpg21101999@gmail.com" class="text-sm sm:text-base font-semibold text-slate-900 hover:text-blue-600 transition-colors break-all">
+                                    alexpg21101999@gmail.com
+                                </a>
+                            </div>
+
+                            <!-- Phone Card -->
+                            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col justify-between gap-3">
+                                <span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Phone / WhatsApp</span>
+                                <a href="tel:+919746449173" class="text-sm sm:text-base font-semibold text-slate-900 hover:text-blue-600 transition-colors flex items-center gap-2">
+                                    <i class="fa-solid fa-phone text-emerald-600 text-sm"></i>
+                                    <span>+91 9746449173</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Location Card -->
+                        <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-start gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid fa-map-pin"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Residential Address</div>
+                                <p class="text-sm text-slate-700 leading-relaxed font-medium">
+                                    Panklavil house, Pazuthuruth, Kaduthuruthy, Thiruvampady p.o, Pin: 686612, Kottayam, Kerala, India.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Social Profiles & Quick Actions -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold">Portfolios &amp; Profiles</div>
+
+                        <!-- LinkedIn Link -->
+                        <a href="https://www.linkedin.com/search/results/all/?keywords=Christy%20Alex%20Martin" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-2xl bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-300 shadow-2xs transition-all group">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-xl">
+                                        <i class="fa-brands fa-linkedin-in"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-slate-500 font-medium">LinkedIn</div>
+                                        <div class="font-display font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Christy Alex Martin</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                        </a>
+
+                        <!-- Behance Portfolio Link -->
+                        <a href="https://www.behance.net/search/projects?search=cyaxmn%201999" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-2xl bg-white hover:bg-cyan-50/40 border border-slate-200 hover:border-cyan-300 shadow-2xs transition-all group">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-700 flex items-center justify-center text-xl">
+                                        <i class="fa-brands fa-behance"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-slate-500 font-medium">Portfolio / Behance</div>
+                                        <div class="font-display font-bold text-slate-900 group-hover:text-cyan-700 transition-colors">cyaxmn 1999</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-slate-400 group-hover:text-cyan-700 transition-colors"></i>
+                            </div>
+                        </a>
+
+                        <!-- Print / Download Resume CTA -->
+                        <button onclick="window.print()" class="no-print w-full p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md shadow-blue-600/15 flex items-center justify-center gap-2.5 transition-all">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Download / Print Formatted CV (PDF)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 bg-slate-50/60 py-8 text-center text-xs text-slate-500 no-print">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="font-medium">&copy; <span id="current-year"></span> Christy Alex Martin. Motion Graphics &amp; 3D Graphic Designer.</p>
+            <p>Kottayam, Kerala, India</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // One-Click Copy Email Function using fallback-safe execCommand
+        function copyEmail() {
+            const email = 'alexpg21101999@gmail.com';
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                showToast('Copied to clipboard: ' + email);
+            } catch (err) {
+                showToast('Email: ' + email);
+            }
+
+            document.body.removeChild(tempInput);
+        }
+
+        // Toast Notification Controller
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Interactive Discipline Filter for Skills, Projects & Activities
+        function filterPortfolio(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+                    btn.classList.remove('text-slate-600');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-slate-600');
+                }
+            });
+
+            const items = document.querySelectorAll('.portfolio-item');
+            items.forEach(item => {
+                const itemCategories = item.dataset.category.split(' ');
+                if (category === 'all' || itemCategories.includes(category)) {
+                    item.classList.remove('opacity-30');
+                } else {
+                    item.classList.add('opacity-30');
+                }
+            });
+        }
+
+        // Subtle Interactive 3D Wireframe Geometry in Hero using Three.js (Light Studio Palette)
+        window.onload = function () {
+            const container = document.getElementById('hero-canvas-container');
+            if (!container || typeof THREE === 'undefined') return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Outer Icosahedron wireframe in subtle slate-indigo
+            const icoGeometry = new THREE.IcosahedronGeometry(2.1, 1);
+            const icoMaterial = new THREE.MeshBasicMaterial({
+                color: 0x94a3b8,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.28
+            });
+            const icosahedron = new THREE.Mesh(icoGeometry, icoMaterial);
+            icosahedron.position.set(2.4, 0.2, 0);
+            scene.add(icosahedron);
+
+            // Inner Octahedron wireframe in crisp cobalt blue
+            const innerGeo = new THREE.OctahedronGeometry(1.1, 0);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: 0x2563eb,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.25
+            });
+            const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+            innerMesh.position.set(2.4, 0.2, 0);
+            scene.add(innerMesh);
+
+            function updateLayout() {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+
+                if (width < 1024) {
+                    icosahedron.position.set(0, 0.5, -1);
+                    innerMesh.position.set(0, 0.5, -1);
+                } else {
+                    icosahedron.position.set(2.5, 0.1, 0);
+                    innerMesh.position.set(2.5, 0.1, 0);
+                }
+            }
+            updateLayout();
+            window.addEventListener('resize', updateLayout);
+
+            let mouseX = 0;
+            let mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                icosahedron.rotation.x += 0.002 + mouseY * 0.01;
+                icosahedron.rotation.y += 0.003 + mouseX * 0.01;
+
+                innerMesh.rotation.x -= 0.004;
+                innerMesh.rotation.y -= 0.005;
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        };
+    </script>
+</body>
+</html>
